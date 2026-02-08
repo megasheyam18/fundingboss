@@ -48,10 +48,10 @@ export const FormProvider = ({ children }) => {
       loanType: '',
       salary: '',
       loanAmount: '',
-      hasPF: 'No',
+      hasPF: '',
       designation: '',
-      hasGST: 'No',
-      businessRegistration: 'No',
+      hasGST: '',
+      businessRegistration: '',
       currentStep: 1,
       captchaVerified: false,
       panVerified: false

@@ -1,105 +1,140 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../context/FormContext';
-import { Briefcase, IndianRupee, FileText, CheckCircle2 } from 'lucide-react';
+import { Briefcase, IndianRupee, FileText } from 'lucide-react';
 
 const Step3 = () => {
     const { formData, updateFormData } = useForm();
     const navigate = useNavigate();
     
-    const [loanType, setLoanType] = useState(formData.loanType || '');
+    const [loanType, setLoanType] = useState(formData.loanType || 'Salaried');
     const [salary, setSalary] = useState(formData.salary || '');
     const [loanAmount, setLoanAmount] = useState(formData.loanAmount || '');
-    const [hasPF, setHasPF] = useState(formData.hasPF || '');
+    const [hasPF, setHasPF] = useState(formData.hasPF || 'No');
     const [designation, setDesignation] = useState(formData.designation || '');
-    const [hasGST, setHasGST] = useState(formData.hasGST || '');
-    const [businessRegProof, setBusinessRegProof] = useState(formData.businessRegProof || '');
+    const [hasGST, setHasGST] = useState(formData.hasGST || 'No');
+    const [businessRegistration, setBusinessRegistration] = useState(formData.businessRegistration || 'No');
     
     const [error, setError] = useState('');
+    const [loading, setLoading] = useState(false);
 
     const handleLoanTypeChange = (type) => {
         setLoanType(type);
         setError('');
     };
 
-    const handleSubmit = () => {
+    const handleSubmit = async () => {
         if (!loanType) {
             setError('Please select a loan type');
             return;
         }
 
-        if (loanType === 'salaried') {
-            if (!salary || !loanAmount || !hasPF || !designation) {
-                setError('Please fill all salaried details');
-                return;
-            }
-        } else if (loanType === 'business') {
-            if (!hasGST || !businessRegProof || !loanAmount) {
-                setError('Please fill all business details');
-                return;
-            }
+        if (loanType === 'Salaried' && (!salary || !loanAmount || !designation)) {
+            setError('Please fill all salaried details');
+            return;
         }
 
-        updateFormData({
-            loanType,
-            salary,
-            loanAmount,
-            hasPF,
-            designation,
-            hasGST,
-            businessRegProof,
-            currentStep: 4
-        });
-        navigate('/step4');
+        if (loanType === 'Business' && !loanAmount) {
+            setError('Please fill all business details');
+            return;
+        }
+
+        setLoading(true);
+        setError('');
+
+        const body = {
+            "sheet1": {
+                "mobile": formData.mobile,
+                "pinCode": formData.pinCode,
+                "panNumber": formData.panNumber,
+                "loanType": loanType,
+                "salary": salary,
+                "loanAmount": loanAmount,
+                "hasPF": hasPF,
+                "designation": designation,
+                "hasGST": hasGST,
+                "businessRegistration": businessRegistration
+            }
+        };
+
+        try {
+            const response = await fetch('https://api.sheety.co/8158302f4f8bfc807bc480429465b087/Harish-project/sheet1', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify(body)
+            });
+
+            if (response.ok) {
+                updateFormData({
+                    loanType,
+                    salary,
+                    loanAmount,
+                    hasPF,
+                    designation,
+                    hasGST,
+                    businessRegistration,
+                    currentStep: 4
+                });
+                navigate('/step4');
+            } else {
+                setError('Submission failed. Please try again.');
+            }
+        } catch (err) {
+            setError('An error occurred. Please check your connection.');
+        } finally {
+            setLoading(false);
+        }
     };
 
     const isFormValid = () => {
-        if (loanType === 'salaried') {
-            return salary && loanAmount && hasPF && designation;
-        }
-        if (loanType === 'business') {
-            return hasGST && businessRegProof && loanAmount;
-        }
+        if (loanType === 'Salaried') return salary && loanAmount && designation;
+        if (loanType === 'Business') return loanAmount;
         return false;
     };
 
     return (
         <div className="step-card fade-in">
             <div className="step-header">
-                <button className="back-link" onClick={() => navigate('/step2')}>← Back</button>
-                <h2>Step 3 of 3</h2>
+                <button className="back-link" onClick={() => navigate('/step2')} disabled={loading}>← Back</button>
+                <h2>Final Step</h2>
                 <h1>Professional Details</h1>
-                <p>Tell us about your source of income</p>
+                <p>Provide your income information to get your offer</p>
             </div>
 
             <div className="loan-type-toggle">
                 <button 
-                    className={`toggle-btn ${loanType === 'salaried' ? 'active' : ''}`}
-                    onClick={() => handleLoanTypeChange('salaried')}
+                    className={`toggle-btn ${loanType === 'Salaried' ? 'active' : ''}`}
+                    onClick={() => handleLoanTypeChange('Salaried')}
+                    disabled={loading}
                 >
                     <Briefcase size={20} />
                     <span>Salaried</span>
                 </button>
                 <button 
-                    className={`toggle-btn ${loanType === 'business' ? 'active' : ''}`}
-                    onClick={() => handleLoanTypeChange('business')}
+                    className={`toggle-btn ${loanType === 'Business' ? 'active' : ''}`}
+                    onClick={() => handleLoanTypeChange('Business')}
+                    disabled={loading}
                 >
                     <IndianRupee size={20} />
                     <span>Business</span>
                 </button>
             </div>
 
-            {loanType === 'salaried' && (
+            {loanType === 'Salaried' && (
                 <div className="dynamic-fields fade-in">
                     <div className="form-group">
-                        <label>Current Annual Salary</label>
+                        <label>Monthly Salary (INR)</label>
                         <div className="input-with-icon">
                             <IndianRupee size={16} className="icon" />
                             <input 
                                 type="number" 
-                                placeholder="Annual CTC (e.g. 600000)" 
+                                placeholder="E.g. 50000" 
                                 value={salary}
                                 onChange={(e) => setSalary(e.target.value)}
+                                disabled={loading}
                             />
                         </div>
                     </div>
@@ -109,22 +144,23 @@ const Step3 = () => {
                             <IndianRupee size={16} className="icon" />
                             <input 
                                 type="number" 
-                                placeholder="Amount (e.g. 100000)" 
+                                placeholder="E.g. 200000" 
                                 value={loanAmount}
                                 onChange={(e) => setLoanAmount(e.target.value)}
+                                disabled={loading}
                             />
                         </div>
                     </div>
                     <div className="form-group">
                         <label>Do you have PF?</label>
                         <div className="radio-group">
-                            <label className={`radio-label ${hasPF === 'yes' ? 'selected' : ''}`}>
-                                <input type="radio" value="yes" checked={hasPF === 'yes'} onChange={() => setHasPF('yes')} />
-                                Yes
+                            <label className={`radio-item ${hasPF === 'Yes' ? 'selected' : ''}`}>
+                                <input type="radio" value="Yes" checked={hasPF === 'Yes'} onChange={() => setHasPF('Yes')} disabled={loading} />
+                                <span>Yes</span>
                             </label>
-                            <label className={`radio-label ${hasPF === 'no' ? 'selected' : ''}`}>
-                                <input type="radio" value="no" checked={hasPF === 'no'} onChange={() => setHasPF('no')} />
-                                No
+                            <label className={`radio-item ${hasPF === 'No' ? 'selected' : ''}`}>
+                                <input type="radio" value="No" checked={hasPF === 'No'} onChange={() => setHasPF('No')} disabled={loading} />
+                                <span>No</span>
                             </label>
                         </div>
                     </div>
@@ -137,37 +173,38 @@ const Step3 = () => {
                                 placeholder="Job Title" 
                                 value={designation}
                                 onChange={(e) => setDesignation(e.target.value)}
+                                disabled={loading}
                             />
                         </div>
                     </div>
                 </div>
             )}
 
-            {loanType === 'business' && (
+            {loanType === 'Business' && (
                 <div className="dynamic-fields fade-in">
                     <div className="form-group">
-                        <label>Do you have GST Number?</label>
+                        <label>Do you have GST?</label>
                         <div className="radio-group">
-                            <label className={`radio-label ${hasGST === 'yes' ? 'selected' : ''}`}>
-                                <input type="radio" value="yes" checked={hasGST === 'yes'} onChange={() => setHasGST('yes')} />
-                                Yes
+                            <label className={`radio-item ${hasGST === 'Yes' ? 'selected' : ''}`}>
+                                <input type="radio" value="Yes" checked={hasGST === 'Yes'} onChange={() => setHasGST('Yes')} disabled={loading} />
+                                <span>Yes</span>
                             </label>
-                            <label className={`radio-label ${hasGST === 'no' ? 'selected' : ''}`}>
-                                <input type="radio" value="no" checked={hasGST === 'no'} onChange={() => setHasGST('no')} />
-                                No
+                            <label className={`radio-item ${hasGST === 'No' ? 'selected' : ''}`}>
+                                <input type="radio" value="No" checked={hasGST === 'No'} onChange={() => setHasGST('No')} disabled={loading} />
+                                <span>No</span>
                             </label>
                         </div>
                     </div>
                     <div className="form-group">
                         <label>Business Registration Proof?</label>
                         <div className="radio-group">
-                            <label className={`radio-label ${businessRegProof === 'yes' ? 'selected' : ''}`}>
-                                <input type="radio" value="yes" checked={businessRegProof === 'yes'} onChange={() => setBusinessRegProof('yes')} />
-                                Yes
+                            <label className={`radio-item ${businessRegistration === 'Yes' ? 'selected' : ''}`}>
+                                <input type="radio" value="Yes" checked={businessRegistration === 'Yes'} onChange={() => setBusinessRegistration('Yes')} disabled={loading} />
+                                <span>Yes</span>
                             </label>
-                            <label className={`radio-label ${businessRegProof === 'no' ? 'selected' : ''}`}>
-                                <input type="radio" value="no" checked={businessRegProof === 'no'} onChange={() => setBusinessRegProof('no')} />
-                                No
+                            <label className={`radio-item ${businessRegistration === 'No' ? 'selected' : ''}`}>
+                                <input type="radio" value="No" checked={businessRegistration === 'No'} onChange={() => setBusinessRegistration('No')} disabled={loading} />
+                                <span>No</span>
                             </label>
                         </div>
                     </div>
@@ -177,9 +214,10 @@ const Step3 = () => {
                             <IndianRupee size={16} className="icon" />
                             <input 
                                 type="number" 
-                                placeholder="Amount (e.g. 500000)" 
+                                placeholder="E.g. 500000" 
                                 value={loanAmount}
                                 onChange={(e) => setLoanAmount(e.target.value)}
+                                disabled={loading}
                             />
                         </div>
                     </div>
@@ -189,14 +227,23 @@ const Step3 = () => {
             {error && <div className="error-message">{error}</div>}
 
             <button 
-                className="submit-button" 
+                className={`submit-button ${loading ? 'loading' : ''}`} 
                 onClick={handleSubmit}
-                disabled={!isFormValid()}
+                disabled={!isFormValid() || loading}
             >
-                Submit Application
+                {loading ? 'Submitting...' : 'Submit Application'}
             </button>
         </div>
     );
 };
+
+await fetch("http://localhost:5000/api/submit-loan", {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify(formData)
+});
+
 
 export default Step3;
