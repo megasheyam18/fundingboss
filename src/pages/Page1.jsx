@@ -8,7 +8,7 @@ const Page1 = () => {
   const { formData, updateFormData } = useForm();
   const navigate = useNavigate();
   
-  const [mobile, setMobile] = useState(formData.mobile);
+  const [mobile, setMobile] = useState(formData.mobile || '');
   const [captchaInput, setCaptchaInput] = useState('');
   const [captcha, setCaptcha] = useState({ id: '', challenge: '', status: 'idle' });
   const [error, setError] = useState('');
@@ -18,10 +18,19 @@ const Page1 = () => {
     fetchCaptcha();
   }, []);
 
+  // ✅ FIXED: use VITE_API_URL
   const fetchCaptcha = async () => {
     try {
-      const response = await axios.get('http://localhost:5000/api/generate-captcha');
-      setCaptcha({ id: response.data.id, challenge: response.data.challenge, status: 'idle' });
+      const response = await axios.get(
+        `${import.meta.env.VITE_API_URL}/api/generate-captcha`
+      );
+      setCaptcha({
+        id: response.data.id,
+        challenge: response.data.challenge,
+        status: 'idle'
+      });
+      setCaptchaInput('');
+      setError('');
     } catch (err) {
       setError('Failed to load CAPTCHA');
     }
@@ -33,14 +42,19 @@ const Page1 = () => {
     setError('');
   };
 
+  // ✅ FIXED: use VITE_API_URL
   const verifyCaptcha = async () => {
     if (!captchaInput) return;
     setIsVerifying(true);
     try {
-      const response = await axios.post('http://localhost:5000/api/verify-captcha', {
-        id: captcha.id,
-        userInput: captchaInput
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/verify-captcha`,
+        {
+          id: captcha.id,
+          userInput: captchaInput
+        }
+      );
+
       if (response.data.success) {
         setCaptcha(prev => ({ ...prev, status: 'verified' }));
         updateFormData({ mobile, captchaVerified: true });
@@ -68,12 +82,14 @@ const Page1 = () => {
   return (
     <div className="page-card">
       <h1>Let's get started</h1>
-      <p className="page-desc">Enter your mobile number to begin your loan application.</p>
+      <p className="page-desc">
+        Enter your mobile number to begin your loan application.
+      </p>
 
       <div className="form-group">
         <label>Mobile Number</label>
-        <input 
-          type="tel" 
+        <input
+          type="tel"
           className={`input-field ${error && mobile.length !== 10 ? 'error' : ''}`}
           placeholder="Enter 10 digit mobile number"
           value={mobile}
@@ -87,28 +103,29 @@ const Page1 = () => {
         <div className="captcha-container">
           <div className="captcha-display">
             {captcha.challenge || '......'}
-            <button 
-              type="button" 
-              onClick={fetchCaptcha} 
+            <button
+              type="button"
+              onClick={fetchCaptcha}
               style={{ background: 'none', border: 'none', marginLeft: '10px', cursor: 'pointer' }}
             >
               <RefreshCcw size={18} color="#475569" />
             </button>
           </div>
-          
+
           <div style={{ display: 'flex', gap: '10px' }}>
-            <input 
-              type="text" 
+            <input
+              type="text"
               className="input-field"
               placeholder="Enter code"
               value={captchaInput}
               onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
               disabled={captcha.status === 'verified'}
             />
+
             {captcha.status !== 'verified' && (
-              <button 
-                type="button" 
-                className="btn-primary" 
+              <button
+                type="button"
+                className="btn-primary"
                 style={{ width: '100px', padding: '10px' }}
                 onClick={verifyCaptcha}
                 disabled={!captchaInput || isVerifying}
@@ -116,6 +133,7 @@ const Page1 = () => {
                 {isVerifying ? <Loader2 className="spinner" size={18} /> : 'Verify'}
               </button>
             )}
+
             {captcha.status === 'verified' && (
               <div style={{ display: 'flex', alignItems: 'center', color: 'var(--success)' }}>
                 <CheckCircle size={24} />
@@ -127,8 +145,8 @@ const Page1 = () => {
 
       {error && <div className="error-msg">{error}</div>}
 
-      <button 
-        className="btn-primary" 
+      <button
+        className="btn-primary"
         style={{ marginTop: '20px' }}
         disabled={!canContinue}
         onClick={handleContinue}
