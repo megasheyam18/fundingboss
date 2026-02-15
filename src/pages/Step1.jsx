@@ -94,12 +94,13 @@ const Step1 = () => {
         <div className="page-card">
             <div style={{ textAlign: 'center', marginBottom: '30px' }}>
               
-                <h1 style={{ marginTop: '20px' }}>Get Started</h1>
-                <p className="page-desc">Enter your mobile number to begin your application</p>
+                <h1 style={{ marginTop: '20px' }}>Grow Your Business, Faster! with Funding Boss Loan
+</h1>
+                <p className="page-desc">Apply Now & Get Funds in 24 Hours!</p>
             </div>
 
             <div className="form-group">
-                <label htmlFor="mobile">Mobile Number</label>
+                <label htmlFor="mobile">Mobile Number Linked with Aadhar</label>
                 <div style={{ position: 'relative' }}>
                     <span style={{ position: 'absolute', left: '14px', top: '50%', transform: 'translateY(-50%)', color: 'var(--text-sub)' }}>
                         <Phone size={18} />
