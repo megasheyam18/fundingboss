@@ -61,7 +61,9 @@ const Step3 = () => {
                 })
             });
 
-            if (response.ok) {
+            const data = await response.json();
+
+            if (response.ok && data.success) {
                 updateFormData({
                     loanType,
                     salary,
@@ -74,9 +76,11 @@ const Step3 = () => {
                 });
                 navigate('/step4');
             } else {
-                setError('Submission failed. Please try again.');
+                console.error('Submission Error:', data);
+                setError(data.message || data.error || 'Submission failed. Please try again.');
             }
         } catch (err) {
+            console.error('Network/Client Error:', err);
             setError('An error occurred. Please check your connection.');
         } finally {
             setLoading(false);
@@ -100,7 +104,6 @@ const Step3 = () => {
                 >
                     ← Back
                 </button>
-                <h2>Final Step</h2>
                 <h1>Professional Details</h1>
                 <p className="page-desc">Provide your income information to get your offer</p>
             </div>
@@ -113,15 +116,19 @@ const Step3 = () => {
                         background: loanType === 'Salaried' ? 'var(--primary)' : 'white',
                         color: loanType === 'Salaried' ? 'white' : 'var(--primary)',
                         border: '1.5px solid var(--primary)',
+                        display: 'flex',
                         flexDirection: 'column',
-                        padding: '15px',
-                        height: 'auto'
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '20px 15px',
+                        height: 'auto',
+                        minHeight: '100px'
                     }}
                     onClick={() => handleLoanTypeChange('Salaried')}
                     disabled={loading}
                 >
-                    <Briefcase size={20} />
-                    <span style={{ fontSize: '0.8rem', marginTop: '5px' }}>Salaried</span>
+                    <Briefcase size={24} />
+                    <span style={{ fontSize: '0.9rem', marginTop: '10px', fontWeight: '500' }}>Salaried</span>
                 </button>
                 <button 
                     className="btn-primary"
@@ -130,15 +137,19 @@ const Step3 = () => {
                         background: loanType === 'Business' ? 'var(--primary)' : 'white',
                         color: loanType === 'Business' ? 'white' : 'var(--primary)',
                         border: '1.5px solid var(--primary)',
+                        display: 'flex',
                         flexDirection: 'column',
-                        padding: '15px',
-                        height: 'auto'
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        padding: '20px 15px',
+                        height: 'auto',
+                        minHeight: '100px'
                     }}
                     onClick={() => handleLoanTypeChange('Business')}
                     disabled={loading}
                 >
-                    <IndianRupee size={20} />
-                    <span style={{ fontSize: '0.8rem', marginTop: '5px' }}>Business</span>
+                    <IndianRupee size={24} />
+                    <span style={{ fontSize: '0.9rem', marginTop: '10px', fontWeight: '500' }}>Business</span>
                 </button>
             </div>
 

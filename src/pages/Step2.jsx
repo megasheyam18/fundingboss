@@ -78,7 +78,6 @@ const Step2 = () => {
                 >
                     ← Back
                 </button>
-                <h2>Step 2 of 3</h2>
                 <h1>Location & Identity</h1>
             </div>
 

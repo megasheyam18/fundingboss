@@ -22,7 +22,6 @@ function App() {
         <div className="app-container">
           <header className="header">
             <div className="logo">Funding<span>Boss</span></div>
-            <div className="badge-nbfc">NBFC Partnered</div>
           </header>
           
           <main className="main-content">
