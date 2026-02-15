@@ -1,4 +1,5 @@
 import React from 'react';
+import logo from './assets/logo.svg';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { FormProvider, useForm } from './context/FormContext';
 import Step1 from './pages/Step1';
@@ -21,7 +22,9 @@ function App() {
       <Router>
         <div className="app-container">
           <header className="header">
-            <div className="logo">Funding<span>Boss</span></div>
+            <div className="logo">
+              <img src={logo} alt="Funding Boss" style={{ height: '50px' }} />
+            </div>
           </header>
           
           <main className="main-content">
