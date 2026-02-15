@@ -17,6 +17,7 @@ const Page1 = () => {
   useEffect(() => {
     fetchCaptcha();
   }, []);
+  
 
   // ✅ FIXED: use VITE_API_URL
   const fetchCaptcha = async () => {
