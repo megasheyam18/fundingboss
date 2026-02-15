@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../context/FormContext';
-import axios from 'axios';
+import API_URL from '../api/config';
 import { ShieldCheck, Phone, RefreshCcw } from 'lucide-react';
 
 const Step1 = () => {
@@ -24,7 +24,7 @@ const Step1 = () => {
 
     const fetchCaptcha = async () => {
         try {
-            const response = await axios.get('http://localhost:5000/api/generate-captcha');
+            const response = await axios.get(`${API_URL}/api/generate-captcha`);
             setCaptchaId(response.data.id);
             setCaptchaChallenge(response.data.challenge);
             setCaptchaInput('');
@@ -43,7 +43,7 @@ const Step1 = () => {
         if (!captchaInput) return;
         setLoading(true);
         try {
-            const response = await axios.post('http://localhost:5000/api/verify-captcha', {
+            const response = await axios.post(`${API_URL}/api/verify-captcha`, {
                 id: captchaId,
                 userInput: captchaInput
             });

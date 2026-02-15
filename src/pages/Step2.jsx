@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../context/FormContext';
 import axios from 'axios';
+import API_URL from '../api/config';
 import { MapPin, CreditCard, User, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const Step2 = () => {
@@ -41,7 +42,7 @@ const Step2 = () => {
         setLoading(true);
         setError('');
         try {
-            const response = await axios.post('http://localhost:5000/api/verify-pan', { panNumber });
+            const response = await axios.post(`${API_URL}/api/verify-pan`, { panNumber });
             if (response.data.success) {
                 setPanVerified(true);
                 updateFormData({ panNumber, panVerified: true });

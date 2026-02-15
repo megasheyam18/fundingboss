@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { CheckCircle2, Loader2, ArrowRight, ShieldCheck } from 'lucide-react';
+import API_URL from '../api/config';
 
 const LoanForm = () => {
   const [currentStep, setCurrentStep] = useState(1);
@@ -60,7 +61,7 @@ const LoanForm = () => {
   const verifyPAN = async (pan) => {
     setPanStatus('loading');
     try {
-      const response = await axios.post('http://localhost:5000/api/verify-pan', { panNumber: pan });
+      const response = await axios.post(`${API_URL}/api/verify-pan`, { panNumber: pan });
       if (response.data.success) {
         setPanStatus('verified');
         setVerifiedName(response.data.data.fullName);

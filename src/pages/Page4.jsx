@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useForm } from '../context/FormContext';
 import { CheckCircle, ArrowLeft } from 'lucide-react';
 import axios from 'axios';
+import API_URL from '../api/config';
 
 const Page4 = () => {
   const { formData, resetForm } = useForm();
@@ -12,7 +13,7 @@ const Page4 = () => {
     // Final submission to backend
     const submitData = async () => {
       try {
-        await axios.post('http://localhost:5000/api/submit-loan', formData);
+        await axios.post(`${API_URL}/api/submit-loan`, formData);
       } catch (e) {
         console.error('Final submission failed');
       }

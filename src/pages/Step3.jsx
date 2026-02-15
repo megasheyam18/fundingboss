@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../context/FormContext';
 import { Briefcase, IndianRupee, FileText } from 'lucide-react';
+import API_URL from '../api/config';
 
 const Step3 = () => {
     const { formData, updateFormData } = useForm();
@@ -43,7 +44,7 @@ const Step3 = () => {
         setError('');
 
         try {
-            const response = await fetch('http://localhost:5000/api/submit-loan', {
+            const response = await fetch(`${API_URL}/api/submit-loan`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
