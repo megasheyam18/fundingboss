@@ -5,7 +5,7 @@ import { Briefcase, IndianRupee, FileText } from 'lucide-react';
 import API_URL from '../api/config';
 
 const Step3 = () => {
-    const { formData, updateFormData } = useForm();
+    const { formData, updateFormData, syncLead } = useForm();
     const navigate = useNavigate();
     
     const [loanType, setLoanType] = useState(formData.loanType || '');
@@ -23,6 +23,20 @@ const Step3 = () => {
         setLoanType(type);
         setError('');
     };
+
+    // Auto-sync with Google Sheet on any field change
+    useEffect(() => {
+        const localData = {
+            loanType,
+            salary,
+            loanAmount,
+            hasPF,
+            designation,
+            hasGST,
+            businessRegistration
+        };
+        syncLead({ ...formData, ...localData });
+    }, [loanType, salary, loanAmount, hasPF, designation, hasGST, businessRegistration]);
 
     const handleSubmit = async () => {
         if (!loanType) {

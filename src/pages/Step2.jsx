@@ -6,7 +6,7 @@ import API_URL from '../api/config';
 import { MapPin, CreditCard, User, CheckCircle, AlertTriangle } from 'lucide-react';
 
 const Step2 = () => {
-    const { formData, updateFormData } = useForm();
+    const { formData, updateFormData, syncLead } = useForm();
     const navigate = useNavigate();
     
     const [pinCode, setPinCode] = useState(formData.pinCode);
@@ -23,6 +23,7 @@ const Step2 = () => {
         }
         setPinCode(val);
         setError('');
+        syncLead({ ...formData, pinCode: val, panNumber });
     };
 
     const handlePanChange = (e) => {
@@ -30,6 +31,7 @@ const Step2 = () => {
         setPanNumber(val);
         setPanVerified(false);
         setError('');
+        syncLead({ ...formData, pinCode, panNumber: val });
     };
 
     const verifyPan = async () => {

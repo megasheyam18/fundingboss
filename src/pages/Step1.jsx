@@ -6,7 +6,7 @@ import API_URL from '../api/config';
 import { Phone, ShieldCheck, RefreshCw, AlertTriangle } from 'lucide-react';
 
 const Step1 = () => {
-    const { formData, updateFormData } = useForm();
+    const { formData, updateFormData, syncLead } = useForm();
     const navigate = useNavigate();
     
     const [mobile, setMobile] = useState(formData.mobile || '');
@@ -40,7 +40,11 @@ const Step1 = () => {
     const handleMobileChange = (e) => {
         const val = e.target.value.replace(/\D/g, '').slice(0, 10);
         setMobile(val);
+        setMobile(val); // Local state update
         setError('');
+        
+        // Sync to sheet (Debounced) - Pass the NEW value merged with current formData
+        syncLead({ ...formData, mobile: val });
     };
 
     const handleCaptchaChange = (e) => {
