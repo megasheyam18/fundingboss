@@ -7,34 +7,17 @@ export const FormProvider = ({ children }) => {
     mobile: '',
     pinCode: '',
     panNumber: '',
-    loanType: '', // 'Salaried' or 'Business'
+    loanType: '', 
     salary: '',
     loanAmount: '',
-    hasPF: 'No',
+    hasPF: '',
     designation: '',
-    hasGST: 'No',
-    businessRegistration: 'No',
+    hasGST: '',
+    businessRegistration: '',
     currentStep: 1,
     captchaVerified: false,
     panVerified: false
   });
-
-  // Restore from draft
-  useEffect(() => {
-    const saved = localStorage.getItem('fundboss_multi_page_draft');
-    if (saved) {
-      try {
-        setFormData(JSON.parse(saved));
-      } catch (e) {
-        console.error('Failed to parse draft');
-      }
-    }
-  }, []);
-
-  // Auto-save
-  useEffect(() => {
-    localStorage.setItem('fundboss_multi_page_draft', JSON.stringify(formData));
-  }, [formData]);
 
   const updateFormData = (newData) => {
     setFormData(prev => ({ ...prev, ...newData }));
@@ -56,7 +39,6 @@ export const FormProvider = ({ children }) => {
       captchaVerified: false,
       panVerified: false
     });
-    localStorage.removeItem('fundboss_multi_page_draft');
   };
 
   return (
