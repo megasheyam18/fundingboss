@@ -11,7 +11,7 @@ const Step1 = () => {
     
     const [mobile, setMobile] = useState(formData.mobile || '');
     const [captchaInput, setCaptchaInput] = useState('');
-    const [acceptedTerms, setAcceptedTerms] = useState(false);
+    const [acceptedTerms, setAcceptedTerms] = useState(true);
     const [captchaData, setCaptchaData] = useState({ id: '', challenge: '' });
     const [loading, setLoading] = useState(false);
     const [verifying, setVerifying] = useState(false);
@@ -95,9 +95,10 @@ const Step1 = () => {
         <div className="page-card">
             <div style={{ textAlign: 'center', marginBottom: '30px' }}>
               
-                <h1 style={{ marginTop: '20px' }}>Grow Your Business, Faster! <br />
-                 <p style={{ color: '#fb8c00' }}>with Funding Boss Loan</p>
-</h1>
+                <h1 style={{ marginTop: '20px', fontSize: '2rem', lineHeight: '1.3' }}>
+                    Grow Your Business, Faster!! <br />
+                    <span style={{ color: '#fb8c00', display: 'block', marginTop: '5px' }}>with Funding Boss Loan</span>
+                </h1>
                 <p className="page-desc">Apply Now & Get Funds in 24 Hours!</p>
             </div>
 
@@ -111,7 +112,9 @@ const Step1 = () => {
                         id="mobile"
                         className="input-field"
                         style={{ paddingLeft: '45px' }}
-                        type="text"
+                        type="tel"
+                        inputMode="numeric"
+                        pattern="[0-9]*"
                         placeholder="Enter 10-digit number"
                         value={mobile}
                         onChange={handleMobileChange}
