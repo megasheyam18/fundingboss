@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../context/FormContext';
 import { Briefcase, IndianRupee, FileText } from 'lucide-react';
@@ -9,6 +9,7 @@ const Step3 = () => {
     const navigate = useNavigate();
     
     const [loanType, setLoanType] = useState(formData.loanType || '');
+
     const [salary, setSalary] = useState(formData.salary || '');
     const [loanAmount, setLoanAmount] = useState(formData.loanAmount || '');
     const [hasPF, setHasPF] = useState(formData.hasPF || '');

@@ -11,6 +11,7 @@ const Step1 = () => {
     
     const [mobile, setMobile] = useState(formData.mobile || '');
     const [captchaInput, setCaptchaInput] = useState('');
+    const [acceptedTerms, setAcceptedTerms] = useState(false);
     const [captchaData, setCaptchaData] = useState({ id: '', challenge: '' });
     const [loading, setLoading] = useState(false);
     const [verifying, setVerifying] = useState(false);
@@ -175,7 +176,7 @@ const Step1 = () => {
         setError('');
       }}
     />
-  I/We hereby confirm that I/We have read, understood and agree to the "T & C", "Terms Of Use" and "Privacy Policy"
+  <p style={{color:'grey'}}>I/We hereby confirm that I/We have read, understood and agree to the "T & C", "Terms Of Use" and "Privacy Policy"</p>
   </label>
 </div>
 
