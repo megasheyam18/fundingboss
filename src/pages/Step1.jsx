@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useForm } from '../context/FormContext';
+import axios from 'axios';
 import API_URL from '../api/config';
 import { ShieldCheck, Phone, RefreshCcw } from 'lucide-react';
 
@@ -29,6 +30,7 @@ const Step1 = () => {
             setCaptchaChallenge(response.data.challenge);
             setCaptchaInput('');
         } catch (err) {
+            console.error('CAPTCHA Fetch Error:', err);
             setError('Failed to load CAPTCHA. Please try again.');
         }
     };
