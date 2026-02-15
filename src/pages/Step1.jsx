@@ -119,7 +119,7 @@ const Step1 = () => {
             </div>
 
             <div className="form-group">
-                <label>Security Verification</label>
+                {/* <label>Enter Captcha</label> */}
                 <div className="captcha-container">
                     <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
                         <div className="captcha-display" style={{ flex: 1, marginBottom: 0 }}>
@@ -165,9 +165,20 @@ const Step1 = () => {
                 )}
             </button>
 
-            <p style={{ textAlign: 'center', marginTop: '20px', fontSize: '0.75rem', color: 'var(--text-sub)' }}>
-                By continuing, you agree to our Terms and Data Privacy Policy. No OTP will be sent.
-            </p>
+           <div className="form-group" style={{ marginTop: '15px' }}>
+  <label style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+    <input
+      type="checkbox"
+      checked={acceptedTerms}
+      onChange={(e) => {
+        setAcceptedTerms(e.target.checked);
+        setError('');
+      }}
+    />
+  I/We hereby confirm that I/We have read, understood and agree to the "T & C", "Terms Of Use" and "Privacy Policy"
+  </label>
+</div>
+
         </div>
     );
 };

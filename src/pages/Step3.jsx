@@ -267,7 +267,7 @@ const Step3 = () => {
                 onClick={handleSubmit}
                 disabled={!isFormValid() || loading}
             >
-                {loading ? 'Submitting...' : 'Submit Application'}
+                {loading ? 'Apply now...' : 'Apply now'}
             </button>
         </div>
     );
