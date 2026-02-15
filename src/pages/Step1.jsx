@@ -76,26 +76,24 @@ const Step1 = () => {
     const isButtonEnabled = mobile.length === 10 && captchaVerified;
 
     return (
-        <div className="step-card fade-in">
-            <div className="step-header">
+        <div className="page-card">
+            <div>
                 <h2>Step 1 of 3</h2>
                 <h1>Enter Mobile Number</h1>
-                <p>Verify your identity to proceed with the application</p>
+                <p className="page-desc">Verify your identity to proceed with the application</p>
             </div>
 
             <div className="form-group">
                 <label htmlFor="mobile">Mobile Number</label>
-                <div className="input-with-icon">
-                    <Phone size={18} className="icon" />
-                    <input
-                        id="mobile"
-                        type="tel"
-                        placeholder="10-digit mobile number"
-                        value={mobile}
-                        onChange={handleMobileChange}
-                        autoComplete="tel"
-                    />
-                </div>
+                <input
+                    id="mobile"
+                    className="input-field"
+                    type="tel"
+                    placeholder="10-digit mobile number"
+                    value={mobile}
+                    onChange={handleMobileChange}
+                    autoComplete="tel"
+                />
             </div>
 
             <div className="captcha-section">
@@ -108,34 +106,41 @@ const Step1 = () => {
                 ) : (
                     <div className="captcha-container">
                         <div className="captcha-display">
-                            <span className="captcha-text">{captchaChallenge}</span>
-                            <button className="refresh-btn" onClick={fetchCaptcha} title="Refresh CAPTCHA">
-                                <RefreshCcw size={16} />
-                            </button>
+                            {captchaChallenge}
                         </div>
-                        <div className="captcha-input-group">
+                        <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
                             <input
+                                className="input-field"
                                 type="text"
+                                style={{ flex: 1 }}
                                 placeholder="Enter characters"
                                 value={captchaInput}
                                 onChange={(e) => setCaptchaInput(e.target.value.toUpperCase())}
                             />
                             <button 
-                                className="verify-btn" 
+                                className="btn-primary" 
+                                style={{ width: 'auto', padding: '0 20px' }}
                                 onClick={verifyCaptcha}
                                 disabled={!captchaInput || loading}
                             >
-                                {loading ? 'Checking...' : 'Verify'}
+                                {loading ? '...' : 'Verify'}
                             </button>
                         </div>
+                        <button 
+                            onClick={fetchCaptcha} 
+                            style={{ background: 'none', border: 'none', color: 'var(--primary)', cursor: 'pointer', marginTop: '10px', fontSize: '0.8rem' }}
+                        >
+                            Refresh CAPTCHA
+                        </button>
                     </div>
                 )}
             </div>
 
-            {error && <div className="error-message">{error}</div>}
+            {error && <div className="error-msg">{error}</div>}
 
             <button 
-                className="submit-button" 
+                className="btn-primary" 
+                style={{ marginTop: '20px' }}
                 onClick={handleContinue}
                 disabled={!isButtonEnabled}
             >

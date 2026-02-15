@@ -8,20 +8,19 @@ const Step2 = () => {
     const { formData, updateFormData } = useForm();
     const navigate = useNavigate();
     
-    const [pincode, setPincode] = useState(formData.pincode);
+    const [pinCode, setPinCode] = useState(formData.pinCode);
     const [panNumber, setPanNumber] = useState(formData.panNumber);
-    const [panName, setPanName] = useState(formData.panName);
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
     const [panVerified, setPanVerified] = useState(formData.panVerified);
 
-    const handlePincodeChange = (e) => {
+    const handlePinCodeChange = (e) => {
         const val = e.target.value.replace(/\D/g, '').slice(0, 6);
         if (val.length === 1 && val !== '6') {
             alert("We are currently operating only in Tamil Nadu");
             return;
         }
-        setPincode(val);
+        setPinCode(val);
         setError('');
     };
 
@@ -38,25 +37,14 @@ const Step2 = () => {
             setError('Invalid PAN format (Example: ABCDE1234F)');
             return;
         }
-        if (!panName.trim()) {
-            setError('Please enter your name as per PAN');
-            return;
-        }
 
         setLoading(true);
         setError('');
         try {
             const response = await axios.post('http://localhost:5000/api/verify-pan', { panNumber });
             if (response.data.success) {
-                const fetchedName = response.data.data.fullName.toUpperCase();
-                const inputName = panName.trim().toUpperCase();
-
-                if (fetchedName === inputName || (fetchedName === 'UNKNOWN USER')) {
-                    setPanVerified(true);
-                    updateFormData({ panNumber, panName, panVerified: true });
-                } else {
-                    setError(`Name mismatch. PAN belongs to: ${fetchedName}`);
-                }
+                setPanVerified(true);
+                updateFormData({ panNumber, panVerified: true });
             }
         } catch (err) {
             setError('PAN verification failed. Please check the number.');
@@ -66,7 +54,7 @@ const Step2 = () => {
     };
 
     const handleNext = () => {
-        if (pincode.length !== 6 || pincode[0] !== '6') {
+        if (pinCode.length !== 6 || pinCode[0] !== '6') {
             setError('We only operate in Tamil Nadu (PIN must start with 6)');
             return;
         }
@@ -74,55 +62,47 @@ const Step2 = () => {
             setError('Please verify your PAN details first');
             return;
         }
-        updateFormData({ pincode, currentStep: 3 });
+        updateFormData({ pinCode, currentStep: 3 });
         navigate('/step3');
     };
 
-    const isButtonEnabled = pincode.length === 6 && pincode[0] === '6' && panVerified;
+    const isButtonEnabled = pinCode.length === 6 && pinCode[0] === '6' && panVerified;
 
     return (
-        <div className="step-card fade-in">
-            <div className="step-header">
-                <button className="back-link" onClick={() => navigate('/step1')}>← Back</button>
+        <div className="page-card">
+            <div>
+                <button 
+                    style={{ background: 'none', border: 'none', color: 'var(--text-sub)', cursor: 'pointer', marginBottom: '20px', padding: 0 }} 
+                    onClick={() => navigate('/step1')}
+                >
+                    ← Back
+                </button>
                 <h2>Step 2 of 3</h2>
                 <h1>Location & Identity</h1>
             </div>
 
             <div className="form-group">
-                <label htmlFor="pincode">PIN Code</label>
-                <div className="input-with-icon">
-                    <MapPin size={18} className="icon" />
-                    <input
-                        id="pincode"
-                        type="text"
-                        placeholder="6-digit PIN code"
-                        value={pincode}
-                        onChange={handlePincodeChange}
-                    />
-                </div>
-                <small>Serviceable in Tamil Nadu only (PIN starts with 6)</small>
-            </div>
-
-            <div className="form-group">
-                <label htmlFor="panName">Name as per PAN</label>
-                <div className="input-with-icon">
-                    <User size={18} className="icon" />
-                    <input
-                        id="panName"
-                        type="text"
-                        placeholder="FULL NAME"
-                        value={panName}
-                        onChange={(e) => setPanName(e.target.value.toUpperCase().replace(/[^A-Z\s]/g, ''))}
-                    />
-                </div>
+                <label htmlFor="pinCode">PIN Code</label>
+                <input
+                    id="pinCode"
+                    className="input-field"
+                    type="text"
+                    placeholder="6-digit PIN code"
+                    value={pinCode}
+                    onChange={handlePinCodeChange}
+                />
+                <small style={{ display: 'block', marginTop: '5px', color: 'var(--text-sub)', fontSize: '0.75rem' }}>
+                    Serviceable in Tamil Nadu only (PIN starts with 6)
+                </small>
             </div>
 
             <div className="form-group">
                 <label htmlFor="panNumber">PAN Card Number</label>
-                <div className="input-with-icon">
-                    <CreditCard size={18} className="icon" />
+                <div style={{ display: 'flex', gap: '10px' }}>
                     <input
                         id="panNumber"
+                        className="input-field"
+                        style={{ flex: 1 }}
                         type="text"
                         placeholder="ABCDE1234F"
                         value={panNumber}
@@ -131,25 +111,29 @@ const Step2 = () => {
                     />
                     {!panVerified ? (
                         <button 
-                            className="inline-verify-btn" 
+                            className="btn-primary" 
+                            style={{ width: 'auto', padding: '0 20px' }}
                             onClick={verifyPan}
-                            disabled={panNumber.length !== 10 || loading || !panName}
+                            disabled={panNumber.length !== 10 || loading}
                         >
                             {loading ? '...' : 'Verify'}
                         </button>
                     ) : (
-                        <CheckCircle size={18} className="status-icon success" />
+                        <div style={{ display: 'flex', alignItems: 'center', color: 'var(--success)' }}>
+                             <CheckCircle size={18} />
+                        </div>
                     )}
                 </div>
             </div>
 
-            {error && <div className="error-message alert-style">
+            {error && <div className="error-msg">
                 <AlertTriangle size={16} />
                 <span>{error}</span>
             </div>}
 
             <button 
-                className="submit-button" 
+                className="btn-primary" 
+                style={{ marginTop: '20px' }}
                 onClick={handleNext}
                 disabled={!isButtonEnabled}
             >
