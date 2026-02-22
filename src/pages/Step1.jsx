@@ -96,7 +96,7 @@ const Step1 = () => {
             <div style={{ textAlign: 'center', marginBottom: '30px' }}>
               
                 <h1 style={{ marginTop: '20px', fontSize: '2rem', lineHeight: '1.3' }}>
-                    Grow Your Business, Faster!! <br />
+                    One-Stop Solution for All Your Financial Needs <br />
                     <span style={{ color: '#fb8c00', display: 'block', marginTop: '5px' }}>with Funding Boss Loan</span>
                 </h1>
                 <p className="page-desc">Apply Now & Get Funds in 24 Hours!</p>
