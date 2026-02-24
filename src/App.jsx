@@ -35,7 +35,9 @@ function App() {
                 path="/step2" 
                 element={
                   <ProtectedRoute step={2}>
-                    <Step2 />
+                    <Step2 />Optimizing tool selection...
+                    
+                    
                   </ProtectedRoute>
                 } 
               />
